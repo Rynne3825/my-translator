@@ -3,12 +3,12 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/v/release/phuc-nt/my-translator?color=green&label=release" alt="Latest Release">
+  <img src="https://img.shields.io/github/v/release/Rynne3825/my-translator?color=green&label=release" alt="Latest Release">
   <img src="https://img.shields.io/badge/built_with-Tauri-orange?logo=tauri" alt="Built with Tauri">
   <img src="https://img.shields.io/badge/macOS-Apple%20Silicon%20%7C%20Intel-black?logo=apple" alt="macOS">
   <img src="https://img.shields.io/badge/Windows-10%2F11-blue?logo=windows" alt="Windows">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="License">
-  <img src="https://img.shields.io/github/stars/phuc-nt/my-translator?style=flat&color=yellow" alt="Stars">
+  <img src="https://img.shields.io/github/stars/Rynne3825/my-translator?style=flat&color=yellow" alt="Stars">
 </p>
 
 **My Translator** is a real-time speech translation desktop app built with Tauri.
@@ -134,7 +134,7 @@ Current structure overview is documented in [docs/file_structure.md](docs/file_s
 ## Quick Start
 
 ```bash
-git clone https://github.com/phuc-nt/my-translator.git
+git clone https://github.com/Rynne3825/my-translator.git
 cd my-translator
 npm install
 ```
@@ -152,18 +152,6 @@ npm run tauri build
 ```
 
 Requires: Rust (stable), Node.js 18+, Python 3.10+, macOS 13+ or Windows 10+.
-
----
-
-## Star History
-
-<a href="https://www.star-history.com/?repos=phuc-nt%2Fmy-translator&type=date&legend=top-left">
- <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/image?repos=phuc-nt/my-translator&type=date&theme=dark&legend=top-left" />
-  <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/image?repos=phuc-nt/my-translator&type=date&legend=top-left" />
-  <img alt="Star History Chart" src="https://api.star-history.com/image?repos=phuc-nt/my-translator&type=date&legend=top-left" />
- </picture>
-</a>
 
 ---
 

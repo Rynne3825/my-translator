@@ -61,3 +61,8 @@ scripts/test_*.py
 .private/
 GEMINI.md
 CLAUDE.md
+
+# Local generated artifacts
+log_audit_*.txt
+tmp_video_frames/
+scripts/translate/__pycache__/
