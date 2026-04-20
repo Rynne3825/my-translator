@@ -41,7 +41,8 @@ static NEXT_SESSION_ID: AtomicU64 = AtomicU64::new(1);
 fn deepgram_language(source_lang: &str) -> Option<String> {
     let normalized = source_lang.trim().to_lowercase();
     match normalized.as_str() {
-        "" | "auto" => Some("multi".to_string()),
+        "" | "auto" => None,
+        "multi" => Some("multi".to_string()),
         "zh" => Some("zh".to_string()),
         code => Some(code.to_string()),
     }
@@ -91,21 +92,71 @@ fn average_confidence(words: &[Value], fallback: Option<f64>) -> Option<f64> {
     }
 }
 
-fn detected_language(alternative: &Value, source_lang: &str) -> Value {
-    if source_lang != "auto" {
-        return json!(source_lang);
+fn detected_language_candidate(alternative: &Value) -> Option<String> {
+    if let Some(lang) = alternative.get("detected_language").and_then(|v| v.as_str()) {
+        return Some(lang.to_string());
     }
 
-    if let Some(lang) = alternative.get("detected_language").and_then(|v| v.as_str()) {
-        return json!(lang);
-    }
-    if let Some(lang) = alternative
+    alternative
         .get("languages")
         .and_then(|v| v.as_array())
         .and_then(|langs| langs.first())
-        .and_then(|v| v.as_str())
+        .and_then(|first| {
+            if let Some(lang) = first.as_str() {
+                return Some(lang.to_string());
+            }
+            first
+                .get("language")
+                .and_then(|v| v.as_str())
+                .map(|lang| lang.to_string())
+        })
+}
+
+fn detected_language_confidence(alternative: &Value) -> Option<f64> {
+    if let Some(conf) = alternative
+        .get("detected_language_confidence")
+        .and_then(|v| v.as_f64())
     {
+        return Some(conf);
+    }
+
+    if let Some(conf) = alternative
+        .get("language_confidence")
+        .and_then(|v| v.as_f64())
+    {
+        return Some(conf);
+    }
+
+    alternative
+        .get("languages")
+        .and_then(|v| v.as_array())
+        .and_then(|langs| langs.first())
+        .and_then(|first| first.get("confidence").and_then(|v| v.as_f64()))
+}
+
+fn detected_language(alternative: &Value, source_lang: &str, strict_language: bool) -> Value {
+    let normalized_source = source_lang.trim().to_lowercase();
+    if normalized_source != "auto" && normalized_source != "multi" {
+        return json!(source_lang);
+    }
+
+    if strict_language {
+        if let Some(confidence) = detected_language_confidence(alternative) {
+            if confidence < 0.65 {
+                if normalized_source == "multi" {
+                    return json!("multi");
+                }
+                return Value::Null;
+            }
+        }
+    }
+
+    if let Some(lang) = detected_language_candidate(alternative) {
         return json!(lang);
+    }
+
+    if normalized_source == "multi" {
+        return json!("multi");
     }
 
     Value::Null
@@ -179,6 +230,7 @@ pub async fn create_deepgram_token(
 pub async fn start_deepgram_stream(
     source_lang: String,
     endpoint_delay: Option<u32>,
+    strict_language: Option<bool>,
     channel: Channel<String>,
     state: tauri::State<'_, DeepgramState>,
     settings_state: tauri::State<'_, SettingsState>,
@@ -195,6 +247,7 @@ pub async fn start_deepgram_stream(
 
     let token = create_deepgram_token_inner(&api_key).await?;
     let resolved_delay = endpoint_delay.unwrap_or(1500);
+    let strict_language_enabled = strict_language.unwrap_or(false);
     let url = build_deepgram_url(&source_lang, resolved_delay)?;
 
     let session_id = NEXT_SESSION_ID.fetch_add(1, Ordering::SeqCst);
@@ -326,13 +379,15 @@ pub async fn start_deepgram_stream(
                                         let utterance_id = start_s
                                             .map(|start| format!("start-{}", (start * 100.0).round() as i64))
                                             .unwrap_or_else(|| format!("seq-{}", seq));
-                                        let language = detected_language(&alternative, &source_lang);
+                                        let language = detected_language(&alternative, &source_lang, strict_language_enabled);
+                                        let language_confidence = detected_language_confidence(&alternative);
 
                                         emit_result(&channel_clone, json!({
                                             "type": if is_final { "original" } else { "provisional" },
                                             "text": transcript,
                                             "speaker": Value::Null,
                                             "language": language,
+                                            "detected_language_confidence": language_confidence,
                                             "confidence": confidence,
                                             "speech_final": speech_final,
                                             "utterance_id": utterance_id,

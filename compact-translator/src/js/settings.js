@@ -9,6 +9,7 @@ const DEFAULT_SETTINGS = {
   target_language: 'en',
   audio_source: 'system',
   endpoint_delay: 1500,
+  strict_language: false,
   overlay_opacity: 0.85,
   view_mode: 'dual',
   font_size: 16,

@@ -10,7 +10,7 @@ export class DeepgramClient {
     this.onError = null;
   }
 
-  async connect({ sourceLanguage = 'auto', endpointDelay = 1500 }) {
+  async connect({ sourceLanguage = 'auto', endpointDelay = 1500, strictLanguage = false }) {
     await this.disconnect();
 
     this.channel = new Channel();
@@ -24,6 +24,7 @@ export class DeepgramClient {
     await invoke('start_deepgram_stream', {
       sourceLang: sourceLanguage,
       endpointDelay,
+      strictLanguage,
       channel: this.channel,
     });
   }

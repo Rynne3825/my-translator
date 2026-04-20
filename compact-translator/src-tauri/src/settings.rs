@@ -15,6 +15,7 @@ pub struct Settings {
     pub target_language: String,
     pub audio_source: String,
     pub endpoint_delay: u32,
+    pub strict_language: bool,
 
     pub overlay_opacity: f32,
     pub view_mode: String,
@@ -53,6 +54,7 @@ impl Default for Settings {
             target_language: "en".to_string(),
             audio_source: "system".to_string(),
             endpoint_delay: 1500,
+            strict_language: false,
 
             overlay_opacity: 0.85,
             view_mode: "dual".to_string(),

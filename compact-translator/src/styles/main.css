@@ -1,6 +1,7 @@
 :root {
   --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
   --font-body: 'Manrope', 'Segoe UI', sans-serif;
+  --font-emoji: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Symbol', sans-serif;
   --sidebar-width: 78px;
   --panel-width: 344px;
   --titlebar-height: 44px;
@@ -1534,6 +1535,39 @@ a:hover { text-decoration: underline; }
   font-size: 12px;
   font-weight: 700;
 }
+
+.lang-badge {
+  font-family: var(--font-emoji);
+  line-height: 1;
+}
+
+.flag-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 14px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.flag-icon-image {
+  object-fit: cover;
+}
+
+.flag-icon-globe {
+  color: var(--text-2);
+  border-color: rgba(var(--accent-rgb), 0.28);
+  background: rgba(var(--accent-rgb), 0.14);
+}
+
+.flag-icon-globe svg {
+  width: 12px;
+  height: 12px;
+}
 .typewriter-caret {
   display: inline-block;
   color: var(--accent-2);
@@ -2448,7 +2482,11 @@ a:hover { text-decoration: underline; }
 }
 
 .lang-picker-flag {
-  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 14px;
 }
 
 .lang-picker-name {
@@ -2569,7 +2607,22 @@ a:hover { text-decoration: underline; }
 }
 
 .lang-picker-option-flag {
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 14px;
+}
+
+.lang-picker-flag .flag-icon,
+.lang-picker-option-flag .flag-icon {
+  width: 100%;
+  height: 100%;
+}
+
+.history-lang-chip .flag-icon {
+  width: 18px;
+  height: 14px;
 }
 
 .lang-picker-option-copy {

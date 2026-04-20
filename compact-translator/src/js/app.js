@@ -8,48 +8,91 @@ import { TranscriptUI } from './ui.js';
 const DEEPGRAM_NOVA3_LANGUAGES = [
   { code: 'auto', name: 'Auto-detect', country: 'Automatic', flag: '🌐', tags: ['auto', 'detect', 'automatic'] },
   { code: 'multi', name: 'Multilingual', country: 'Multi language', flag: '🌍', tags: ['multi', 'multilingual'] },
-  { code: 'en', name: 'English', country: 'United States', flag: '🇺🇸', tags: ['english', 'usa', 'us'] },
-  { code: 'es', name: 'Spanish', country: 'Spain', flag: '🇪🇸', tags: ['spanish', 'spain'] },
-  { code: 'fr', name: 'French', country: 'France', flag: '🇫🇷', tags: ['french', 'france'] },
-  { code: 'de', name: 'German', country: 'Germany', flag: '🇩🇪', tags: ['german', 'germany'] },
-  { code: 'hi', name: 'Hindi', country: 'India', flag: '🇮🇳', tags: ['hindi', 'india'] },
-  { code: 'ru', name: 'Russian', country: 'Russia', flag: '🇷🇺', tags: ['russian', 'russia'] },
-  { code: 'pt', name: 'Portuguese', country: 'Portugal', flag: '🇵🇹', tags: ['portuguese', 'portugal'] },
-  { code: 'ja', name: 'Japanese', country: 'Japan', flag: '🇯🇵', tags: ['japanese', 'japan'] },
-  { code: 'it', name: 'Italian', country: 'Italy', flag: '🇮🇹', tags: ['italian', 'italy'] },
-  { code: 'nl', name: 'Dutch', country: 'Netherlands', flag: '🇳🇱', tags: ['dutch', 'netherlands'] },
-  { code: 'vi', name: 'Vietnamese', country: 'Viet Nam', flag: '🇻🇳', tags: ['vietnamese', 'vietnam', 'viet nam'] },
-  { code: 'ko', name: 'Korean', country: 'Korea', flag: '🇰🇷', tags: ['korean', 'korea'] },
-  { code: 'th', name: 'Thai', country: 'Thailand', flag: '🇹🇭', tags: ['thai', 'thailand'] },
-  { code: 'id', name: 'Indonesian', country: 'Indonesia', flag: '🇮🇩', tags: ['indonesian', 'indonesia'] },
-  { code: 'ar', name: 'Arabic', country: 'Saudi Arabia', flag: '🇸🇦', tags: ['arabic', 'saudi', 'middle east'] },
-  { code: 'ar-AE', name: 'Arabic (UAE)', country: 'United Arab Emirates', flag: '🇦🇪', tags: ['arabic', 'uae', 'emirates'] },
-  { code: 'ar-SA', name: 'Arabic (Saudi Arabia)', country: 'Saudi Arabia', flag: '🇸🇦', tags: ['arabic', 'saudi arabia'] },
-  { code: 'ar-QA', name: 'Arabic (Qatar)', country: 'Qatar', flag: '🇶🇦', tags: ['arabic', 'qatar'] },
-  { code: 'ar-KW', name: 'Arabic (Kuwait)', country: 'Kuwait', flag: '🇰🇼', tags: ['arabic', 'kuwait'] },
-  { code: 'ar-SY', name: 'Arabic (Syria)', country: 'Syria', flag: '🇸🇾', tags: ['arabic', 'syria'] },
-  { code: 'ar-LB', name: 'Arabic (Lebanon)', country: 'Lebanon', flag: '🇱🇧', tags: ['arabic', 'lebanon'] },
-  { code: 'ar-PS', name: 'Arabic (Palestine)', country: 'Palestine', flag: '🇵🇸', tags: ['arabic', 'palestine'] },
-  { code: 'ar-JO', name: 'Arabic (Jordan)', country: 'Jordan', flag: '🇯🇴', tags: ['arabic', 'jordan'] },
-  { code: 'ar-EG', name: 'Arabic (Egypt)', country: 'Egypt', flag: '🇪🇬', tags: ['arabic', 'egypt'] },
-  { code: 'ar-SD', name: 'Arabic (Sudan)', country: 'Sudan', flag: '🇸🇩', tags: ['arabic', 'sudan'] },
-  { code: 'ar-TD', name: 'Arabic (Chad)', country: 'Chad', flag: '🇹🇩', tags: ['arabic', 'chad'] },
-  { code: 'ar-MA', name: 'Arabic (Morocco)', country: 'Morocco', flag: '🇲🇦', tags: ['arabic', 'morocco'] },
-  { code: 'ar-DZ', name: 'Arabic (Algeria)', country: 'Algeria', flag: '🇩🇿', tags: ['arabic', 'algeria'] },
-  { code: 'ar-TN', name: 'Arabic (Tunisia)', country: 'Tunisia', flag: '🇹🇳', tags: ['arabic', 'tunisia'] },
-  { code: 'ar-IQ', name: 'Arabic (Iraq)', country: 'Iraq', flag: '🇮🇶', tags: ['arabic', 'iraq'] },
-  { code: 'ar-IR', name: 'Arabic (Iran)', country: 'Iran', flag: '🇮🇷', tags: ['arabic', 'iran'] },
-  { code: 'be', name: 'Belarusian', country: 'Belarus', flag: '🇧🇾', tags: ['belarusian', 'belarus'] },
-  { code: 'bn', name: 'Bengali', country: 'Bangladesh', flag: '🇧🇩', tags: ['bengali', 'bangladesh'] },
-  { code: 'bs', name: 'Bosnian', country: 'Bosnia and Herzegovina', flag: '🇧🇦', tags: ['bosnian', 'bosnia'] },
-  { code: 'bg', name: 'Bulgarian', country: 'Bulgaria', flag: '🇧🇬', tags: ['bulgarian', 'bulgaria'] },
-  { code: 'ca', name: 'Catalan', country: 'Spain', flag: '🇪🇸', tags: ['catalan', 'spain'] },
-  { code: 'zh', name: 'Chinese (Mandarin)', country: 'China', flag: '🇨🇳', tags: ['chinese', 'mandarin', 'china'] },
-  { code: 'zh-CN', name: 'Chinese (Simplified)', country: 'China', flag: '🇨🇳', tags: ['chinese', 'simplified', 'china'] },
-  { code: 'zh-Hans', name: 'Chinese (Hans)', country: 'China', flag: '🇨🇳', tags: ['chinese', 'hans', 'simplified'] },
-  { code: 'zh-HK', name: 'Chinese (Cantonese)', country: 'Hong Kong', flag: '🇭🇰', tags: ['chinese', 'cantonese', 'hong kong'] },
-  { code: 'cs', name: 'Czech', country: 'Czech Republic', flag: '🇨🇿', tags: ['czech', 'czech republic'] },
-  { code: 'da', name: 'Danish', country: 'Denmark', flag: '🇩🇰', tags: ['danish', 'denmark'] },
+  { code: 'en', name: 'English', country: 'United States', flag: '🇺🇸', tags: ['english', 'en'] },
+  { code: 'en-US', name: 'English (US)', country: 'United States', flag: '🇺🇸', tags: ['english', 'us', 'en-us'] },
+  { code: 'en-AU', name: 'English (Australia)', country: 'Australia', flag: '🇦🇺', tags: ['english', 'australia', 'en-au'] },
+  { code: 'en-GB', name: 'English (UK)', country: 'United Kingdom', flag: '🇬🇧', tags: ['english', 'uk', 'british', 'en-gb'] },
+  { code: 'en-IN', name: 'English (India)', country: 'India', flag: '🇮🇳', tags: ['english', 'india', 'en-in'] },
+  { code: 'en-NZ', name: 'English (New Zealand)', country: 'New Zealand', flag: '🇳🇿', tags: ['english', 'new zealand', 'en-nz'] },
+  { code: 'es', name: 'Spanish', country: 'Spain', flag: '🇪🇸', tags: ['spanish', 'es'] },
+  { code: 'es-419', name: 'Spanish (Latin America)', country: 'Latin America', flag: '🇲🇽', tags: ['spanish', 'latin america', 'es-419'] },
+  { code: 'fr', name: 'French', country: 'France', flag: '🇫🇷', tags: ['french', 'fr'] },
+  { code: 'fr-CA', name: 'French (Canada)', country: 'Canada', flag: '🇨🇦', tags: ['french', 'canada', 'fr-ca'] },
+  { code: 'de', name: 'German', country: 'Germany', flag: '🇩🇪', tags: ['german', 'de'] },
+  { code: 'de-CH', name: 'German (Switzerland)', country: 'Switzerland', flag: '🇨🇭', tags: ['german', 'switzerland', 'de-ch'] },
+  { code: 'hi', name: 'Hindi', country: 'India', flag: '🇮🇳', tags: ['hindi', 'hi'] },
+  { code: 'ru', name: 'Russian', country: 'Russia', flag: '🇷🇺', tags: ['russian', 'ru'] },
+  { code: 'pt', name: 'Portuguese', country: 'Portugal', flag: '🇵🇹', tags: ['portuguese', 'pt'] },
+  { code: 'pt-BR', name: 'Portuguese (Brazil)', country: 'Brazil', flag: '🇧🇷', tags: ['portuguese', 'brazil', 'pt-br'] },
+  { code: 'pt-PT', name: 'Portuguese (Portugal)', country: 'Portugal', flag: '🇵🇹', tags: ['portuguese', 'portugal', 'pt-pt'] },
+  { code: 'ja', name: 'Japanese', country: 'Japan', flag: '🇯🇵', tags: ['japanese', 'ja'] },
+  { code: 'it', name: 'Italian', country: 'Italy', flag: '🇮🇹', tags: ['italian', 'it'] },
+  { code: 'nl', name: 'Dutch', country: 'Netherlands', flag: '🇳🇱', tags: ['dutch', 'nl'] },
+  { code: 'nl-BE', name: 'Flemish', country: 'Belgium', flag: '🇧🇪', tags: ['flemish', 'dutch', 'belgium', 'nl-be'] },
+  { code: 'vi', name: 'Vietnamese', country: 'Viet Nam', flag: '🇻🇳', tags: ['vietnamese', 'vi'] },
+  { code: 'ko', name: 'Korean', country: 'Korea', flag: '🇰🇷', tags: ['korean', 'ko'] },
+  { code: 'ko-KR', name: 'Korean (South Korea)', country: 'South Korea', flag: '🇰🇷', tags: ['korean', 'ko-kr'] },
+  { code: 'th', name: 'Thai', country: 'Thailand', flag: '🇹🇭', tags: ['thai', 'th'] },
+  { code: 'th-TH', name: 'Thai (Thailand)', country: 'Thailand', flag: '🇹🇭', tags: ['thai', 'th-th'] },
+  { code: 'id', name: 'Indonesian', country: 'Indonesia', flag: '🇮🇩', tags: ['indonesian', 'id'] },
+  { code: 'ar', name: 'Arabic', country: 'Saudi Arabia', flag: '🇸🇦', tags: ['arabic', 'ar'] },
+  { code: 'ar-AE', name: 'Arabic (UAE)', country: 'United Arab Emirates', flag: '🇦🇪', tags: ['arabic', 'uae', 'ar-ae'] },
+  { code: 'ar-SA', name: 'Arabic (Saudi Arabia)', country: 'Saudi Arabia', flag: '🇸🇦', tags: ['arabic', 'saudi arabia', 'ar-sa'] },
+  { code: 'ar-QA', name: 'Arabic (Qatar)', country: 'Qatar', flag: '🇶🇦', tags: ['arabic', 'qatar', 'ar-qa'] },
+  { code: 'ar-KW', name: 'Arabic (Kuwait)', country: 'Kuwait', flag: '🇰🇼', tags: ['arabic', 'kuwait', 'ar-kw'] },
+  { code: 'ar-SY', name: 'Arabic (Syria)', country: 'Syria', flag: '🇸🇾', tags: ['arabic', 'syria', 'ar-sy'] },
+  { code: 'ar-LB', name: 'Arabic (Lebanon)', country: 'Lebanon', flag: '🇱🇧', tags: ['arabic', 'lebanon', 'ar-lb'] },
+  { code: 'ar-PS', name: 'Arabic (Palestine)', country: 'Palestine', flag: '🇵🇸', tags: ['arabic', 'palestine', 'ar-ps'] },
+  { code: 'ar-JO', name: 'Arabic (Jordan)', country: 'Jordan', flag: '🇯🇴', tags: ['arabic', 'jordan', 'ar-jo'] },
+  { code: 'ar-EG', name: 'Arabic (Egypt)', country: 'Egypt', flag: '🇪🇬', tags: ['arabic', 'egypt', 'ar-eg'] },
+  { code: 'ar-SD', name: 'Arabic (Sudan)', country: 'Sudan', flag: '🇸🇩', tags: ['arabic', 'sudan', 'ar-sd'] },
+  { code: 'ar-TD', name: 'Arabic (Chad)', country: 'Chad', flag: '🇹🇩', tags: ['arabic', 'chad', 'ar-td'] },
+  { code: 'ar-MA', name: 'Arabic (Morocco)', country: 'Morocco', flag: '🇲🇦', tags: ['arabic', 'morocco', 'ar-ma'] },
+  { code: 'ar-DZ', name: 'Arabic (Algeria)', country: 'Algeria', flag: '🇩🇿', tags: ['arabic', 'algeria', 'ar-dz'] },
+  { code: 'ar-TN', name: 'Arabic (Tunisia)', country: 'Tunisia', flag: '🇹🇳', tags: ['arabic', 'tunisia', 'ar-tn'] },
+  { code: 'ar-IQ', name: 'Arabic (Iraq)', country: 'Iraq', flag: '🇮🇶', tags: ['arabic', 'iraq', 'ar-iq'] },
+  { code: 'ar-IR', name: 'Arabic (Iran)', country: 'Iran', flag: '🇮🇷', tags: ['arabic', 'iran', 'ar-ir'] },
+  { code: 'be', name: 'Belarusian', country: 'Belarus', flag: '🇧🇾', tags: ['belarusian', 'be'] },
+  { code: 'bn', name: 'Bengali', country: 'Bangladesh', flag: '🇧🇩', tags: ['bengali', 'bn'] },
+  { code: 'bs', name: 'Bosnian', country: 'Bosnia and Herzegovina', flag: '🇧🇦', tags: ['bosnian', 'bs'] },
+  { code: 'bg', name: 'Bulgarian', country: 'Bulgaria', flag: '🇧🇬', tags: ['bulgarian', 'bg'] },
+  { code: 'ca', name: 'Catalan', country: 'Spain', flag: '🇪🇸', tags: ['catalan', 'ca'] },
+  { code: 'zh', name: 'Chinese (Mandarin, Simplified)', country: 'China', flag: '🇨🇳', tags: ['chinese', 'mandarin', 'simplified', 'zh'] },
+  { code: 'zh-CN', name: 'Chinese (Mandarin, Simplified)', country: 'China', flag: '🇨🇳', tags: ['chinese', 'mandarin', 'simplified', 'zh-cn'] },
+  { code: 'zh-Hans', name: 'Chinese (Mandarin, Simplified)', country: 'China', flag: '🇨🇳', tags: ['chinese', 'mandarin', 'hans', 'zh-hans'] },
+  { code: 'zh-HK', name: 'Chinese (Cantonese, Traditional)', country: 'Hong Kong', flag: '🇭🇰', tags: ['chinese', 'cantonese', 'traditional', 'zh-hk'] },
+  { code: 'zh-TW', name: 'Chinese (Mandarin, Traditional)', country: 'Taiwan', flag: '🇹🇼', tags: ['chinese', 'mandarin', 'traditional', 'zh-tw'] },
+  { code: 'zh-Hant', name: 'Chinese (Mandarin, Traditional)', country: 'Taiwan', flag: '🇹🇼', tags: ['chinese', 'mandarin', 'hant', 'traditional', 'zh-hant'] },
+  { code: 'hr', name: 'Croatian', country: 'Croatia', flag: '🇭🇷', tags: ['croatian', 'hr'] },
+  { code: 'cs', name: 'Czech', country: 'Czech Republic', flag: '🇨🇿', tags: ['czech', 'cs'] },
+  { code: 'da', name: 'Danish', country: 'Denmark', flag: '🇩🇰', tags: ['danish', 'da'] },
+  { code: 'da-DK', name: 'Danish (Denmark)', country: 'Denmark', flag: '🇩🇰', tags: ['danish', 'denmark', 'da-dk'] },
+  { code: 'et', name: 'Estonian', country: 'Estonia', flag: '🇪🇪', tags: ['estonian', 'et'] },
+  { code: 'fi', name: 'Finnish', country: 'Finland', flag: '🇫🇮', tags: ['finnish', 'fi'] },
+  { code: 'el', name: 'Greek', country: 'Greece', flag: '🇬🇷', tags: ['greek', 'el'] },
+  { code: 'he', name: 'Hebrew', country: 'Israel', flag: '🇮🇱', tags: ['hebrew', 'he'] },
+  { code: 'hu', name: 'Hungarian', country: 'Hungary', flag: '🇭🇺', tags: ['hungarian', 'hu'] },
+  { code: 'kn', name: 'Kannada', country: 'India', flag: '🇮🇳', tags: ['kannada', 'kn'] },
+  { code: 'lv', name: 'Latvian', country: 'Latvia', flag: '🇱🇻', tags: ['latvian', 'lv'] },
+  { code: 'lt', name: 'Lithuanian', country: 'Lithuania', flag: '🇱🇹', tags: ['lithuanian', 'lt'] },
+  { code: 'mk', name: 'Macedonian', country: 'North Macedonia', flag: '🇲🇰', tags: ['macedonian', 'mk'] },
+  { code: 'ms', name: 'Malay', country: 'Malaysia', flag: '🇲🇾', tags: ['malay', 'ms'] },
+  { code: 'mr', name: 'Marathi', country: 'India', flag: '🇮🇳', tags: ['marathi', 'mr'] },
+  { code: 'no', name: 'Norwegian', country: 'Norway', flag: '🇳🇴', tags: ['norwegian', 'no'] },
+  { code: 'fa', name: 'Persian', country: 'Iran', flag: '🇮🇷', tags: ['persian', 'farsi', 'fa'] },
+  { code: 'pl', name: 'Polish', country: 'Poland', flag: '🇵🇱', tags: ['polish', 'pl'] },
+  { code: 'ro', name: 'Romanian', country: 'Romania', flag: '🇷🇴', tags: ['romanian', 'ro'] },
+  { code: 'sr', name: 'Serbian', country: 'Serbia', flag: '🇷🇸', tags: ['serbian', 'sr'] },
+  { code: 'sk', name: 'Slovak', country: 'Slovakia', flag: '🇸🇰', tags: ['slovak', 'sk'] },
+  { code: 'sl', name: 'Slovenian', country: 'Slovenia', flag: '🇸🇮', tags: ['slovenian', 'sl'] },
+  { code: 'sv', name: 'Swedish', country: 'Sweden', flag: '🇸🇪', tags: ['swedish', 'sv'] },
+  { code: 'sv-SE', name: 'Swedish (Sweden)', country: 'Sweden', flag: '🇸🇪', tags: ['swedish', 'sweden', 'sv-se'] },
+  { code: 'tl', name: 'Tagalog', country: 'Philippines', flag: '🇵🇭', tags: ['tagalog', 'filipino', 'tl'] },
+  { code: 'ta', name: 'Tamil', country: 'India', flag: '🇮🇳', tags: ['tamil', 'ta'] },
+  { code: 'te', name: 'Telugu', country: 'India', flag: '🇮🇳', tags: ['telugu', 'te'] },
+  { code: 'tr', name: 'Turkish', country: 'Turkey', flag: '🇹🇷', tags: ['turkish', 'tr'] },
+  { code: 'uk', name: 'Ukrainian', country: 'Ukraine', flag: '🇺🇦', tags: ['ukrainian', 'uk'] },
+  { code: 'ur', name: 'Urdu', country: 'Pakistan', flag: '🇵🇰', tags: ['urdu', 'ur'] },
 ];
 
 const LANGUAGE_META_BY_CODE = new Map(DEEPGRAM_NOVA3_LANGUAGES.map((item) => [item.code, item]));
@@ -120,6 +163,8 @@ export class App {
       targetLanguage: byId('target-language', 'sts-target-lang', 'toolbar-target-lang'),
       deepgramKey: byId('deepgram-key', 'sts-deepgram-key'),
       endpointDelay: byId('endpoint-delay', 'range-endpoint-delay'),
+      endpointDelayValue: byId('endpoint-delay-value'),
+      checkStrictLang: byId('check-strict-lang'),
       azureTranslatorKey1: byId('azure-translator-key1', 'sts-azure-key1'),
       azureTranslatorKey2: byId('azure-translator-key2', 'sts-azure-key2'),
       azureTranslatorRegion: byId('azure-translator-region', 'sts-azure-region'),
@@ -201,7 +246,7 @@ export class App {
     }
 
     await this.refreshHistory();
-    this._setStatus('ready', 'San sang');
+    this._setStatus('ready', 'Sẵn sàng');
   }
 
   async _enforceFixedModeSettings() {
@@ -212,8 +257,22 @@ export class App {
     if (!this.currentSettings.theme_mode) patch.theme_mode = 'dark';
     if (!this.currentSettings.accent_preset) patch.accent_preset = 'violet-neon';
     if (!this.currentSettings.ui_locale) patch.ui_locale = 'vi';
+    if (typeof this.currentSettings.strict_language !== 'boolean') patch.strict_language = false;
     if (Object.keys(patch).length === 0) return;
     await this._persistSettingsPatch(patch);
+  }
+
+  _formatEndpointDelayLabel(delayMs) {
+    const safe = Number.isFinite(Number(delayMs)) ? Number(delayMs) : 1500;
+    return `${(Math.max(10, safe) / 1000).toFixed(1)}s`;
+  }
+
+  _normalizeSourceForTranslation(sourceLang) {
+    const normalized = String(sourceLang || '').trim().toLowerCase();
+    if (!normalized || normalized === 'multi') {
+      return 'auto';
+    }
+    return normalized;
   }
 
   _onClick(element, handler) {
@@ -231,7 +290,7 @@ export class App {
     const label = document.getElementById('btn-start-label');
     if (play) play.style.display = running ? 'none' : '';
     if (stop) stop.style.display = running ? '' : 'none';
-    if (label) label.textContent = running ? 'Dung' : 'Bat dau ghi';
+    if (label) label.textContent = running ? 'Dừng' : 'Bắt đầu ghi';
   }
 
   _bindEvents() {
@@ -273,13 +332,13 @@ export class App {
       const settings = this._collectFormSettings();
       await settingsManager.save(settings);
       this.currentSettings = settings;
-      this._toast('Da luu settings');
+      this._toast('Đã lưu cài đặt');
     });
 
     this._onClick(this.el.btnCopy, async () => {
       const text = this.transcriptUI?.getPlainText() || this.translations.map((row) => row.text).join('\n');
       await navigator.clipboard.writeText(text);
-      this._toast('Da copy ban dich');
+      this._toast('Đã sao chép bản dịch');
     });
 
     this._onClick(this.el.btnClear, () => {
@@ -324,8 +383,61 @@ export class App {
       const content = document.getElementById('history-modal-content')?.textContent || '';
       if (!content.trim()) return;
       await navigator.clipboard.writeText(content);
-      this._toast('Da copy transcript');
+      this._toast('Đã sao chép transcript');
     });
+
+    if (this.el.endpointDelay) {
+      const syncDelayLabel = () => {
+        if (this.el.endpointDelayValue) {
+          this.el.endpointDelayValue.textContent = this._formatEndpointDelayLabel(this.el.endpointDelay.value);
+        }
+      };
+
+      this.el.endpointDelay.addEventListener('input', () => {
+        syncDelayLabel();
+      });
+
+      this.el.endpointDelay.addEventListener('change', () => {
+        const endpointDelay = Math.max(10, Number(this.el.endpointDelay.value || 1500));
+        this._persistSettingsPatch({ endpoint_delay: endpointDelay }).catch((err) => {
+          console.error('[settings] failed to save endpoint_delay', err);
+        });
+        if (this.isRunning) {
+          (async () => {
+            try {
+              await this.stop();
+              await this.start();
+              this._toast('Đã áp dụng độ trễ chốt câu mới.');
+            } catch (err) {
+              console.error('[runtime] failed to apply endpoint_delay', err);
+            }
+          })();
+        }
+        syncDelayLabel();
+      });
+
+      syncDelayLabel();
+    }
+
+    if (this.el.checkStrictLang) {
+      this.el.checkStrictLang.addEventListener('change', () => {
+        const strictLanguage = Boolean(this.el.checkStrictLang.checked);
+        this._persistSettingsPatch({ strict_language: strictLanguage }).catch((err) => {
+          console.error('[settings] failed to save strict_language', err);
+        });
+        if (this.isRunning) {
+          (async () => {
+            try {
+              await this.stop();
+              await this.start();
+              this._toast('Đã áp dụng chế độ giảm false positive.');
+            } catch (err) {
+              console.error('[runtime] failed to apply strict_language', err);
+            }
+          })();
+        }
+      });
+    }
 
     this._bindDisplaySettingsEvents();
   }
@@ -493,6 +605,110 @@ export class App {
     };
   }
 
+  _getCountryCodeByLanguage(code) {
+    const normalized = String(code || '').trim();
+    if (!normalized || normalized === 'auto' || normalized === 'multi') {
+      return '';
+    }
+
+    if (normalized === 'es-419') {
+      return 'mx';
+    }
+    if (normalized === 'zh-Hant') {
+      return 'tw';
+    }
+
+    const regionMatch = normalized.match(/-([A-Za-z]{2})$/);
+    if (regionMatch) {
+      return regionMatch[1].toLowerCase();
+    }
+
+    const lang = normalized.split('-')[0].toLowerCase();
+    const defaultCountryByLanguage = {
+      en: 'us',
+      es: 'es',
+      fr: 'fr',
+      de: 'de',
+      hi: 'in',
+      ru: 'ru',
+      pt: 'pt',
+      ja: 'jp',
+      it: 'it',
+      nl: 'nl',
+      vi: 'vn',
+      ko: 'kr',
+      th: 'th',
+      id: 'id',
+      ar: 'sa',
+      be: 'by',
+      bn: 'bd',
+      bs: 'ba',
+      bg: 'bg',
+      ca: 'es',
+      zh: 'cn',
+      hr: 'hr',
+      cs: 'cz',
+      da: 'dk',
+      et: 'ee',
+      fi: 'fi',
+      el: 'gr',
+      he: 'il',
+      hu: 'hu',
+      kn: 'in',
+      lv: 'lv',
+      lt: 'lt',
+      mk: 'mk',
+      ms: 'my',
+      mr: 'in',
+      no: 'no',
+      fa: 'ir',
+      pl: 'pl',
+      ro: 'ro',
+      sr: 'rs',
+      sk: 'sk',
+      sl: 'si',
+      sv: 'se',
+      tl: 'ph',
+      ta: 'in',
+      te: 'in',
+      tr: 'tr',
+      uk: 'ua',
+      ur: 'pk',
+    };
+
+    return defaultCountryByLanguage[lang] || '';
+  }
+
+  _buildFlagMarkup(code, extraClass = '') {
+    const classSuffix = extraClass ? ` ${extraClass}` : '';
+    const countryCode = this._getCountryCodeByLanguage(code);
+
+    if (!countryCode) {
+      return `
+        <span class="flag-icon flag-icon-globe${classSuffix}" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <circle cx="12" cy="12" r="8.5"></circle>
+            <path d="M3.8 12h16.4"></path>
+            <path d="M12 3.5c2.6 2.2 3.9 5.1 3.9 8.5 0 3.4-1.3 6.3-3.9 8.5"></path>
+            <path d="M12 3.5c-2.6 2.2-3.9 5.1-3.9 8.5 0 3.4 1.3 6.3 3.9 8.5"></path>
+          </svg>
+        </span>
+      `;
+    }
+
+    const label = this._escapeHtml(String(code || '').toUpperCase());
+    return `
+      <img
+        class="flag-icon flag-icon-image${classSuffix}"
+        src="https://flagcdn.com/${countryCode}.svg"
+        alt="${label}"
+        loading="lazy"
+        decoding="async"
+        referrerpolicy="no-referrer"
+      />
+    `;
+  }
+
   _hydrateLanguageSelectors() {
     const sourceFallback = this.currentSettings?.source_language || 'auto';
     const targetFallback = this.currentSettings?.target_language || 'en';
@@ -519,7 +735,7 @@ export class App {
       const meta = this._getLanguageMeta(code);
       const option = document.createElement('option');
       option.value = meta.code;
-      option.textContent = `${meta.flag} ${meta.name}`;
+      option.textContent = `${meta.name} (${meta.code.toUpperCase()})`;
       select.appendChild(option);
     });
 
@@ -558,7 +774,7 @@ export class App {
     root.innerHTML = `
       <button type="button" class="lang-picker-trigger" aria-haspopup="listbox" aria-expanded="false">
         <span class="lang-picker-leading">
-          <span class="lang-picker-flag">🌐</span>
+          <span class="lang-picker-flag"></span>
           <span class="lang-picker-name">Auto-detect</span>
           <span class="lang-picker-code">AUTO</span>
         </span>
@@ -567,7 +783,7 @@ export class App {
       <div class="lang-picker-menu" role="listbox">
         <div class="lang-picker-search-wrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-          <input class="lang-picker-search" type="text" placeholder="Tim ngon ngu hoac quoc gia..." />
+          <input class="lang-picker-search" type="text" placeholder="Tìm ngôn ngữ hoặc quốc gia..." />
         </div>
         <div class="lang-picker-options"></div>
       </div>
@@ -592,7 +808,7 @@ export class App {
       return {
         value: option.value,
         code: meta.code,
-        flag: meta.flag,
+        flagMarkup: this._buildFlagMarkup(meta.code, 'picker-flag'),
         name: meta.name,
         country: meta.country,
         searchBlob,
@@ -601,7 +817,7 @@ export class App {
 
     const syncFromSelect = () => {
       const selected = this._getLanguageMeta(select.value);
-      if (flagNode) flagNode.textContent = selected.flag;
+      if (flagNode) flagNode.innerHTML = this._buildFlagMarkup(selected.code, 'picker-flag');
       if (nameNode) nameNode.textContent = selected.name;
       if (codeNode) codeNode.textContent = selected.code.toUpperCase();
 
@@ -618,7 +834,7 @@ export class App {
       if (rows.length === 0) {
         const empty = document.createElement('div');
         empty.className = 'lang-picker-empty';
-        empty.textContent = 'Khong tim thay ngon ngu phu hop.';
+        empty.textContent = 'Không tìm thấy ngôn ngữ phù hợp.';
         optionsWrap.appendChild(empty);
         return;
       }
@@ -629,7 +845,7 @@ export class App {
         optionBtn.className = 'lang-picker-option';
         optionBtn.dataset.value = row.value;
         optionBtn.innerHTML = `
-          <span class="lang-picker-option-flag">${row.flag}</span>
+          <span class="lang-picker-option-flag">${row.flagMarkup}</span>
           <span class="lang-picker-option-copy">
             <span class="lang-picker-option-name">${this._escapeHtml(row.name)}</span>
             <span class="lang-picker-option-country">${this._escapeHtml(row.country)}</span>
@@ -773,7 +989,7 @@ export class App {
 
     if (nextTarget === 'auto' || nextTarget === 'multi') {
       nextTarget = target === 'en' ? 'vi' : 'en';
-      this._toast('Nguon dang Auto/Multi, da doi dich den ve mac dinh.');
+      this._toast('Nguồn đang Auto/Multi, đã đổi đích đến về mặc định.');
     }
 
     this._setLanguagePair(nextSource, nextTarget, { persist: true });
@@ -1231,13 +1447,13 @@ export class App {
           this._setStatus('connected', 'Deepgram connected');
           break;
         case 'connecting':
-          this._setStatus('connecting', 'Dang ket noi Deepgram');
+          this._setStatus('connecting', 'Đang kết nối Deepgram');
           break;
         case 'error':
-          this._setStatus('error', 'Deepgram loi');
+          this._setStatus('error', 'Deepgram lỗi');
           break;
         default:
-          this._setStatus('ready', 'San sang');
+          this._setStatus('ready', 'Sẵn sàng');
           break;
       }
     };
@@ -1263,13 +1479,15 @@ export class App {
         this.el.provisional.textContent = '';
       }
 
-      const sourceLang = (language || this.currentSettings.source_language || 'auto').toString();
+      const sourceLang = this._normalizeSourceForTranslation(
+        (language || this.currentSettings.source_language || 'auto').toString(),
+      );
       const targetLang = this.currentSettings.target_language || 'en';
       await this._queueTranslation(normalized, sourceLang, targetLang);
     };
 
     deepgramClient.onError = async (message) => {
-      this._toast(message || 'Deepgram loi');
+      this._toast(message || 'Deepgram lỗi');
       if (this.isRunning) {
         await this.stop();
       }
@@ -1282,11 +1500,11 @@ export class App {
     this.currentSettings = settings;
 
     if (!settings.deepgram_api_key) {
-      this._toast('Can Deepgram API key');
+      this._toast('Cần Deepgram API key');
       return;
     }
     if (!settings.azure_translator_key1 && !settings.azure_translator_key2) {
-      this._toast('Can Azure Translator key');
+      this._toast('Cần Azure Translator key');
       return;
     }
 
@@ -1310,9 +1528,10 @@ export class App {
       await deepgramClient.connect({
         sourceLanguage: settings.source_language,
         endpointDelay: Number(settings.endpoint_delay || 1500),
+        strictLanguage: Boolean(settings.strict_language),
       });
       await deepgramClient.startAudioForward(settings.audio_source);
-      this._setStatus('connected', 'Dang nhan transcript');
+      this._setStatus('connected', 'Đang nhận transcript');
     } catch (err) {
       this._toast(`Start failed: ${err}`);
       await this.stop();
@@ -1366,7 +1585,7 @@ export class App {
       })
       .catch((err) => {
         console.error('[translate]', err);
-        this._toast(`Dich loi: ${err}`);
+        this._toast(`Dịch lỗi: ${err}`);
       });
 
     return this.translationQueue;
@@ -1464,7 +1683,7 @@ export class App {
       this._renderHistory(this.el.historySearchInput?.value || '');
     } catch (err) {
       console.error('[history]', err);
-      this.el.historyList.innerHTML = '<div class="history-empty">Khong tai duoc lich su.</div>';
+      this.el.historyList.innerHTML = '<div class="history-empty">Không tải được lịch sử.</div>';
     }
   }
 
@@ -1486,7 +1705,7 @@ export class App {
 
     this.el.historyList.innerHTML = '';
     if (rows.length === 0) {
-      this.el.historyList.innerHTML = '<div class="history-empty">Chua co phien nao khop tu khoa.</div>';
+      this.el.historyList.innerHTML = '<div class="history-empty">Chưa có phiên nào khớp từ khóa.</div>';
       return;
     }
 
@@ -1512,9 +1731,9 @@ export class App {
     const startWeek = startToday - (6 * 24 * 60 * 60);
 
     const groups = [
-      { key: 'today', label: 'HOM NAY', items: [] },
-      { key: 'week', label: 'TUAN NAY', items: [] },
-      { key: 'older', label: 'TRUOC DO', items: [] },
+      { key: 'today', label: 'HÔM NAY', items: [] },
+      { key: 'week', label: 'TUẦN NÀY', items: [] },
+      { key: 'older', label: 'TRƯỚC ĐÓ', items: [] },
     ];
 
     rows.forEach((row) => {
@@ -1555,9 +1774,9 @@ export class App {
         <div class="history-session-copy">
           <h3 class="history-session-title">${this._escapeHtml(sessionTitle)}</h3>
           <div class="history-session-sub">
-            <span class="history-lang-chip">${this._escapeHtml(source.flag)} ${this._escapeHtml(source.name)}</span>
+            <span class="history-lang-chip">${this._buildFlagMarkup(source.code, 'history-flag')}<span>${this._escapeHtml(source.name)}</span></span>
             <span class="history-lang-sep">→</span>
-            <span class="history-lang-chip">${this._escapeHtml(target.flag)} ${this._escapeHtml(target.name)}</span>
+            <span class="history-lang-chip">${this._buildFlagMarkup(target.code, 'history-flag')}<span>${this._escapeHtml(target.name)}</span></span>
             <span class="history-dot">•</span>
             <span>${this._escapeHtml(hhmm)}</span>
             <span class="history-dot">•</span>
@@ -1565,10 +1784,10 @@ export class App {
           </div>
         </div>
         <div class="history-session-actions">
-          <button class="history-action-btn primary" data-action="continue" type="button">▶ Tiep tuc</button>
+          <button class="history-action-btn primary" data-action="continue" type="button">▶ Tiếp tục</button>
           <button class="history-action-btn" data-action="view" type="button">Xem</button>
-          <button class="history-action-btn icon-only" data-action="download" type="button" title="Tai transcript">⇩</button>
-          <button class="history-action-btn icon-only danger" data-action="delete" type="button" title="Xoa">✕</button>
+          <button class="history-action-btn icon-only" data-action="download" type="button" title="Tải transcript">⇩</button>
+          <button class="history-action-btn icon-only danger" data-action="delete" type="button" title="Xóa">✕</button>
         </div>
       </div>
       <div class="history-preview">${previewHtml}</div>
@@ -1608,7 +1827,7 @@ export class App {
       .slice(0, 8);
 
     if (lines.length === 0) {
-      return '<p class="history-line">Khong co noi dung xem truoc.</p>';
+      return '<p class="history-line">Không có nội dung xem trước.</p>';
     }
 
     const items = [];
@@ -1668,11 +1887,11 @@ export class App {
   }
 
   async _deleteHistorySession(row) {
-    const ok = window.confirm(`Xoa transcript ${row.filename || ''}?`);
+    const ok = window.confirm(`Xóa transcript ${row.filename || ''}?`);
     if (!ok) return;
     await invoke('delete_transcript', { path: row.path });
     await this.refreshHistory();
-    this._toast('Da xoa transcript');
+    this._toast('Đã xóa transcript');
   }
 
   async _resumeHistorySession(row) {
@@ -1691,7 +1910,7 @@ export class App {
     }
 
     this._showScreen('transcript');
-    this._toast('Da mo lai transcript');
+    this._toast('Đã mở lại transcript');
   }
 
   _parseTranscriptContent(content) {
@@ -1806,6 +2025,10 @@ export class App {
     this._syncToolbarLanguageControls(settings);
     if (this.el.deepgramKey) this.el.deepgramKey.value = settings.deepgram_api_key;
     if (this.el.endpointDelay) this.el.endpointDelay.value = settings.endpoint_delay;
+    if (this.el.endpointDelayValue) {
+      this.el.endpointDelayValue.textContent = this._formatEndpointDelayLabel(settings.endpoint_delay);
+    }
+    if (this.el.checkStrictLang) this.el.checkStrictLang.checked = Boolean(settings.strict_language);
 
     if (this.el.azureTranslatorKey1) this.el.azureTranslatorKey1.value = settings.azure_translator_key1;
     if (this.el.azureTranslatorKey2) this.el.azureTranslatorKey2.value = settings.azure_translator_key2;
@@ -1843,6 +2066,7 @@ export class App {
       target_language: valueOf(this.el.targetLanguage, 'en') || 'en',
       audio_source: this.currentSource || this.el.audioSource?.value || 'system',
       endpoint_delay: numberOf(this.el.endpointDelay, 1500),
+      strict_language: Boolean(this.el.checkStrictLang?.checked),
       overlay_opacity: Number(this.el.rangeOpacity?.value || 85) / 100,
       view_mode: this.viewMode,
       font_size: numberOf(this.el.rangeFontSize, 16),
