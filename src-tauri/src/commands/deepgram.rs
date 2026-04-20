@@ -18,6 +18,8 @@ use tokio_tungstenite::connect_async;
 use tokio_tungstenite::tungstenite::client::IntoClientRequest;
 use tokio_tungstenite::tungstenite::protocol::Message;
 
+use super::common;
+
 pub struct DeepgramState {
     pub session: Mutex<Option<DeepgramSession>>,
 }
@@ -68,7 +70,7 @@ fn stop_deepgram_stream_inner(state: &DeepgramState) {
     }
 }
 
-fn build_deepgram_url(source_lang: &str, endpoint_delay: u32, fast_mode: bool) -> Result<String, String> {
+fn build_deepgram_url(source_lang: &str, endpoint_delay: u32) -> Result<String, String> {
     let mut url = reqwest::Url::parse("wss://api.deepgram.com/v1/listen")
         .map_err(|e| format!("Failed to build Deepgram URL: {}", e))?;
 
@@ -82,7 +84,8 @@ fn build_deepgram_url(source_lang: &str, endpoint_delay: u32, fast_mode: bool) -
         query.append_pair("channels", "1");
         query.append_pair("interim_results", "true");
         query.append_pair("smart_format", "true");
-        query.append_pair("diarize", if fast_mode { "false" } else { "true" });
+        // Single-speaker app profile: always disable diarization.
+        query.append_pair("diarize", "false");
         query.append_pair("endpointing", &resolved_endpoint_delay.to_string());
         query.append_pair("punctuate", "true");
         // NOTE:
@@ -96,11 +99,6 @@ fn build_deepgram_url(source_lang: &str, endpoint_delay: u32, fast_mode: bool) -
     }
 
     Ok(url.to_string())
-}
-
-fn speaker_from_words(words: &[Value]) -> Option<i64> {
-    words.iter()
-        .find_map(|word| word.get("speaker").and_then(|v| v.as_i64()))
 }
 
 fn average_confidence(words: &[Value], fallback: Option<f64>) -> Option<f64> {
@@ -154,20 +152,12 @@ fn preview_text(text: &str) -> String {
     }
 }
 
-fn app_local_dir() -> PathBuf {
-    let mut path = dirs::data_local_dir()
-        .or_else(dirs::data_dir)
-        .unwrap_or_else(|| PathBuf::from("."));
-    path.push("My Translator");
-    path
-}
-
 fn deepgram_log_path() -> PathBuf {
-    app_local_dir().join("deepgram.log")
+    common::app_data_dir().join("deepgram.log")
 }
 
 fn deepgram_log(message: &str) {
-    let dir = app_local_dir();
+    let dir = common::app_data_dir();
     let _ = fs::create_dir_all(&dir);
     let path = deepgram_log_path();
     if let Ok(mut file) = OpenOptions::new().create(true).append(true).open(path) {
@@ -183,46 +173,19 @@ pub fn append_deepgram_log(message: String) -> Result<(), String> {
 }
 
 fn local_env_dir() -> PathBuf {
-    app_local_dir().join("local-env")
+    common::local_env_dir()
 }
 
 fn venv_python_path(env_dir: &Path) -> PathBuf {
-    if cfg!(target_os = "windows") {
-        env_dir.join("Scripts").join("python.exe")
-    } else {
-        env_dir.join("bin").join("python3")
-    }
+    common::venv_python_path(env_dir)
 }
 
 fn setup_marker_path(env_dir: &Path) -> PathBuf {
-    env_dir.join(".setup_complete")
+    common::setup_marker_path(env_dir)
 }
 
 fn resolve_script(script_rel_path: &str) -> Result<PathBuf, String> {
-    let script_basename = Path::new(script_rel_path)
-        .file_name()
-        .and_then(|name| name.to_str())
-        .unwrap_or(script_rel_path)
-        .to_string();
-
-    let mut candidates = vec![
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("../scripts/{}", script_rel_path)),
-        PathBuf::from(format!("scripts/{}", script_rel_path)),
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("../scripts/{}", script_basename)),
-        PathBuf::from(format!("scripts/{}", script_basename)),
-    ];
-
-    if let Ok(exe) = std::env::current_exe() {
-        if let Some(parent) = exe.parent() {
-            candidates.push(parent.join(format!("../Resources/scripts/{}", script_rel_path)));
-            candidates.push(parent.join(format!("../Resources/scripts/{}", script_basename)));
-        }
-    }
-
-    candidates
-        .into_iter()
-        .find(|p| p.exists())
-        .ok_or_else(|| format!("Required script not found: {}", script_rel_path))
+    common::resolve_script(script_rel_path)
 }
 
 fn map_deepgram_auth_error(error: &reqwest::Error) -> String {
@@ -350,7 +313,6 @@ pub async fn create_deepgram_token(
 pub async fn start_deepgram_stream(
     source_lang: String,
     endpoint_delay: Option<u32>,
-    fast_mode: Option<bool>,
     channel: Channel<String>,
     state: tauri::State<'_, DeepgramState>,
     settings: tauri::State<'_, SettingsState>,
@@ -367,13 +329,12 @@ pub async fn start_deepgram_stream(
 
     let token = create_deepgram_token_inner(&api_key).await?;
     let resolved_endpoint_delay = endpoint_delay.unwrap_or(3000);
-    let resolved_fast_mode = fast_mode.unwrap_or(false);
-    let url = build_deepgram_url(&source_lang, resolved_endpoint_delay, resolved_fast_mode)?;
+    let url = build_deepgram_url(&source_lang, resolved_endpoint_delay)?;
     let session_id = NEXT_DEEPGRAM_SESSION_ID.fetch_add(1, Ordering::SeqCst);
     eprintln!("[deepgram] opening websocket {}", url);
     deepgram_log(&format!(
-        "session={} starting source_lang={} endpoint_delay={} fast_mode={} opening websocket {}",
-        session_id, source_lang, resolved_endpoint_delay, resolved_fast_mode, url
+        "session={} starting source_lang={} endpoint_delay={} opening websocket {}",
+        session_id, source_lang, resolved_endpoint_delay, url
     ));
     let (sender, mut receiver) = mpsc::unbounded_channel::<DeepgramCommand>();
     let channel_clone = channel.clone();
@@ -500,13 +461,8 @@ pub async fn start_deepgram_stream(
                                             .and_then(|v| v.as_array())
                                             .cloned()
                                             .unwrap_or_default();
-                                        // In fast mode diarization is disabled, so ignore speaker tags
-                                        // even if the payload still includes unstable speaker fields.
-                                        let speaker = if resolved_fast_mode {
-                                            None
-                                        } else {
-                                            speaker_from_words(&words)
-                                        };
+                                        // Single-speaker profile: ignore speaker tags entirely.
+                                        let speaker: Option<i64> = None;
                                         let confidence = average_confidence(
                                             &words,
                                             alternative.get("confidence").and_then(|v| v.as_f64()),
@@ -855,7 +811,7 @@ pub async fn deepgram_self_test(
     deepgram_log("starting self-test");
 
     let token = create_deepgram_token_inner(&api_key).await?;
-    let url = build_deepgram_url(&effective_source, 3000, false)?;
+    let url = build_deepgram_url(&effective_source, 3000)?;
     deepgram_log(&format!("self-test websocket {}", url));
 
     let mut request = url

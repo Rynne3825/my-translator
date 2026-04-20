@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 use std::process::{Child, ChildStdin, ChildStdout, Command, Stdio};
 use std::sync::{Arc, Mutex};
 
+use super::common;
 use crate::settings::Settings;
 
 pub struct TextTranslatorState {
@@ -26,55 +27,20 @@ pub struct TranslationResponse {
     pub normalization_applied: bool,
 }
 
-fn app_data_dir() -> PathBuf {
-    let mut path = dirs::data_local_dir()
-        .or_else(dirs::data_dir)
-        .unwrap_or_else(|| PathBuf::from("."));
-    path.push("My Translator");
-    path
-}
-
 fn local_env_dir() -> PathBuf {
-    app_data_dir().join("local-env")
+    common::local_env_dir()
 }
 
 fn venv_python_path(env_dir: &Path) -> PathBuf {
-    if cfg!(target_os = "windows") {
-        env_dir.join("Scripts").join("python.exe")
-    } else {
-        env_dir.join("bin").join("python3")
-    }
+    common::venv_python_path(env_dir)
 }
 
 fn setup_marker_path(env_dir: &Path) -> PathBuf {
-    env_dir.join(".setup_complete")
+    common::setup_marker_path(env_dir)
 }
 
 fn resolve_script(script_rel_path: &str) -> Result<PathBuf, String> {
-    let script_basename = Path::new(script_rel_path)
-        .file_name()
-        .and_then(|name| name.to_str())
-        .unwrap_or(script_rel_path)
-        .to_string();
-
-    let mut candidates = vec![
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("../scripts/{}", script_rel_path)),
-        PathBuf::from(format!("scripts/{}", script_rel_path)),
-        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("../scripts/{}", script_basename)),
-        PathBuf::from(format!("scripts/{}", script_basename)),
-    ];
-
-    if let Ok(exe) = std::env::current_exe() {
-        if let Some(parent) = exe.parent() {
-            candidates.push(parent.join(format!("../Resources/scripts/{}", script_rel_path)));
-            candidates.push(parent.join(format!("../Resources/scripts/{}", script_basename)));
-        }
-    }
-
-    candidates
-        .into_iter()
-        .find(|p| p.exists())
-        .ok_or_else(|| format!("Required script not found: {}", script_rel_path))
+    common::resolve_script(script_rel_path)
 }
 
 fn stop_text_translator_inner(process: &Arc<Mutex<Option<TextTranslatorProcess>>>) {

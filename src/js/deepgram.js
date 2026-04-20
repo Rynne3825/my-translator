@@ -23,7 +23,6 @@ export class DeepgramClient {
         await invoke('start_deepgram_stream', {
             sourceLang: config.sourceLanguage || 'auto',
             endpointDelay: config.endpointDelay || 3000,
-            fastMode: config.fastMode === true,
             channel: this.channel,
         });
     }
@@ -51,13 +50,13 @@ export class DeepgramClient {
                 this._setStatus('connected');
                 break;
             case 'provisional':
-                this.onProvisional?.(data.text || '', data.speaker ?? null, data.language ?? null, data);
+                this.onProvisional?.(data.text || '', null, data.language ?? null, data);
                 if (data.confidence !== undefined && data.confidence !== null) {
                     this.onConfidence?.(data.confidence);
                 }
                 break;
             case 'original':
-                this.onOriginal?.(data.text || '', data.speaker ?? null, data.language ?? null, data);
+                this.onOriginal?.(data.text || '', null, data.language ?? null, data);
                 if (data.confidence !== undefined && data.confidence !== null) {
                     this.onConfidence?.(data.confidence);
                 }

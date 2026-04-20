@@ -15,7 +15,6 @@ const normalizeSupportedSettings = (settings = {}) => {
     : 'one_way';
   normalized.language_a = normalized.language_a || 'vi';
   normalized.language_b = normalized.language_b || 'en';
-  normalized.deepgram_fast_mode = normalized.deepgram_fast_mode === true;
   normalized.tts_provider = 'edge';
   normalized.view_mode = normalized.view_mode === 'single'
     ? 'single'
@@ -39,7 +38,6 @@ const DEFAULT_SETTINGS = {
   translation_type: 'one_way',
   language_a: 'vi',
   language_b: 'en',
-  deepgram_fast_mode: false,
   language_hints_strict: false,
   endpoint_delay: 1500,
   local_model: 'turbo',

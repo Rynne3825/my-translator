@@ -64,8 +64,6 @@ pub struct Settings {
     pub language_a: String,
     /// Language B for two-way translation
     pub language_b: String,
-    /// Favor lower-latency Deepgram profile over maximum formatting quality
-    pub deepgram_fast_mode: bool,
     /// Strict language hints mode
     pub language_hints_strict: bool,
     /// Endpoint delay in milliseconds
@@ -119,7 +117,6 @@ impl Default for Settings {
             translation_type: "one_way".to_string(),
             language_a: "vi".to_string(),
             language_b: "en".to_string(),
-            deepgram_fast_mode: false,
             language_hints_strict: false,
             endpoint_delay: 3000,
             local_model: "turbo".to_string(),
